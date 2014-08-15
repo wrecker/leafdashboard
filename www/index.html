@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.4/zepto.min.js"></script>
+<meta charset=utf-8 />
+<title>My Leaf Dashboard</title>
+
+<style>
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+body {
+  text-align: center;
+}
+h1 {
+  text-align: center;
+  font-family: Tahoma, sans-serif;
+}
+
+.box {
+  display: inline-block;
+  text-align: left;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  border: 1px solid rgba(119,113,113,1);
+  border-radius: 5px;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background: radial-gradient(at 100% 100%, rgb(192, 254, 110) 0px, rgb(130, 192, 48) 61%, rgb(106, 163, 31) 100%);
+  -webkit-box-shadow: 4px 4px 6px 1px rgba(0,0,0,0.4) , 2px 2px 2px 0 rgba(0,0,0,0.3) ;
+  box-shadow: 4px 4px 6px 1px rgba(0,0,0,0.4) , 2px 2px 2px 0 rgba(0,0,0,0.3) ;
+  padding: 10px 20px 20px;
+  background-color: rgb(106, 163, 31);
+}
+
+.battery {
+  width: 100px;
+  height: 202px;
+  border: 7px solid #555;
+  border-radius: 10px;
+  position: relative;
+  margin-top: 30px;
+  background-color: #fff;
+  float: left;
+}
+
+.battery:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -16px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 40px;
+  height: 10px;
+  background: #555;
+  border-radius: 2px 2px 0 0;
+}
+
+.power {
+  position: absolute;
+  z-index: 2;
+  left: 5px;
+  top: 5px;
+  right: 5px;
+  bottom: 5px;
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.level1{
+  position: absolute;
+  top: 92.2%;
+  left: 0;
+  right: 0;
+  bottom: 0%;
+  background: #f00;
+  border-radius: 0px 0px 5px 5px;
+}
+.level2{
+  position: absolute;
+  top: 83.8%;
+  left: 0;
+  right: 0;
+  bottom: 8.33%;
+  background: #f00;
+  border-radius: 0px;
+}
+.level3{
+  position: absolute;
+  top: 75.4%;
+  left: 0;
+  right: 0;
+  bottom: 16.66%;
+  background: #f00;
+  border-radius: 0px;
+}
+.level4{
+  position: absolute;
+  top: 67%;
+  left: 0;
+  right: 0;
+  bottom: 24.99%;
+  background: #ff8000;
+  border-radius: 0px;
+}
+.level5{
+  position: absolute;
+  top: 58.6%;
+  left: 0;
+  right: 0;
+  bottom: 33.33%;
+  background: #ff8000;
+  border-radius: 0px;
+}
+.level6{
+  position: absolute;
+  top: 50.4%;
+  left: 0;
+  right: 0;
+  bottom: 41.66%;
+  background: #ff8000;
+  border-radius: 0px;
+}
+.level7{
+  position: absolute;
+  top: 42%;
+  left: 0;
+  right: 0;
+  bottom: 49.99%;
+  background: #ffee00;
+  border-radius: 0px;
+}
+.level8{
+  position: absolute;
+  top: 33.6%;
+  left: 0;
+  right: 0;
+  bottom: 58.32%;
+  background: #ffee00;
+  border-radius: 0px;
+}
+.level9{
+  position: absolute;
+  top: 25.4%;
+  left: 0;
+  right: 0;
+  bottom: 66.66%;
+  background: #ffee00;
+  border-radius: 0px;
+}
+.level10{
+  position: absolute;
+  top: 16.8%;
+  left: 0;
+  right: 0;
+  bottom: 75.2%;
+  background: #3bcf3a;
+  border-radius: 0px;
+}
+.level11{
+  position: absolute;
+  top: 8.4%;
+  left: 0;
+  right: 0;
+  bottom: 84.1%;
+  background: #3bcf3a;
+  border-radius: 0px;
+}
+.level12{
+  position: absolute;
+  top: 0%;
+  left: 0;
+  right: 0;
+  bottom: 92%;
+  background: #3bcf3a;
+  border-radius: 5px 5px 0 0;
+}
+
+.level1, .level2, .level3, .level4, .level5, .level6, .level7, .level8, .level9, .level10, .level11,  .level12 {
+  display: none;
+}
+
+
+.icon {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 15%;
+  margin-left: -20px;
+  display: none;
+  
+}
+.text {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 24px;
+  padding: 50px 10px 10px;
+  margin: 10px;
+  float: left;
+  
+}
+.timestamp {
+  font-size: 16px;
+  font-style: italic;
+  color: #555;
+}
+p {
+  margin: 3px 0px;
+}
+b {
+  color: #fff;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 1);
+}
+</style>
+<script>
+Zepto(function($){
+
+$.getJSON('info.json'+'?'+Math.random()*Math.random(), function(data){
+   var obj = data;
+   console.log(data);
+
+   var level = obj.batteryLevel;
+   $('.power .level').each(function(index){
+      if (index < level) $(this).show();
+   });
+
+   $("#ac_off").html(obj.rangeAcOff);
+   $("#ac_on").html(obj.rangeAcOn);
+   $("#plugged_in").html(obj.pluggedIn);
+   $("#charging").html(obj.charging);
+   $("#last_update").html(obj.lastUpdate);
+
+   if (obj.charging == 'YES') {
+     $('.icon').show();
+   }
+});
+
+});
+</script>
+
+</head>
+<body>
+<div class="box">
+  <div class="battery">
+    <div class="power">
+      <div class="icon"><img src="http://png.findicons.com/files/icons/772/token_light/128/lightning.png"/></div>
+      <div class="level1 level"></div>
+      <div class="level2 level"></div>
+      <div class="level3 level"></div>
+      <div class="level4 level"></div>
+      <div class="level5 level"></div>
+      <div class="level6 level"></div>
+      <div class="level7 level"></div>
+      <div class="level8 level"></div>
+      <div class="level9 level"></div>
+      <div class="level10 level"></div>
+      <div class="level11 level"></div>
+      <div class="level12 level"></div>
+    </div>
+  </div>
+  <div class="text">
+    <p><b>Range</b>:  <span id="ac_off">0</span> miles (ac off) | <span id="ac_on">0</span> miles (ac on)<p>
+    <p><b>Plugged In</b>: <span id="plugged_in">NO</span></p>
+    <p><b>Charging</b>: <span id="charging">NO</span></p>
+    <p><span class="timestamp">Last updated on <span id="last_update"></span></span></p>
+  </div>
+  <div style="clear:both"></div>
+</div>
+</body>
+</html>
